@@ -62,7 +62,7 @@ jobs:
         run: |
           cat >> config.remote.tfbackend<<EOF
           hostname = "${{ secrets.TF_HOSTNAME }}"
-          organization = "${{}}"
+          organization = "${{ secrets.TF_ORGANIZATION }}"
           workspaces = { Name = "${{ inputs.repo_name }}"}
           EOF
       - id: tfinit
