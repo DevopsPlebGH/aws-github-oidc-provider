@@ -73,7 +73,7 @@ jobs:
       - id: plan
         run: |
           terraform plan -input=false -out=tfplan 
-        with:
+        env:
           TF_VAR_create_provider: ${{ inputs.create_provider }}
           TF_VAR_repo_name: ${{ inputs.repo_name }}
           TF_VAR_role_name: ${{ inputs.role_name }}
