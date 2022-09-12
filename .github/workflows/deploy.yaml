@@ -70,6 +70,14 @@ jobs:
       - id: tfinit
         run: |
           terraform init -backend-config=config.remote.tfbackend
+      - id: plan
+        run: |
+          terraform plan -input=false -out=tfplan 
+        with:
+          TF_VAR_create_provider: ${{ inputs.create_provider }}
+          TF_VAR_repo_name: ${{ inputs.repo_name }}
+          TF_VAR_role_name: ${{ inputs.role_name }}
+          TF_VAR_default_conditions: ${{ inputs.default_conditions }}
   
 
         
