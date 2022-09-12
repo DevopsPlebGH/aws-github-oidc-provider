@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      create_provider:
+        description: 'Create OIDC Provider'
+        required: true
+        type: boolean
+      default_conditions: 
+        description: 'Default conditions to allow for OIDC provider'
+        required: false
+        type: choice
+        options:
+          - allow_main
+          - allow_environment          
+          - deny_pull_request
+          - allow_all
+      repo_name:
+        description: 'The name of the repository'
+        required: true
+        type: string
+      role_name:
+        description: 'The name of the role to create'
+        required: true
+        type: string
+
+        
