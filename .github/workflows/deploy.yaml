@@ -17,6 +17,13 @@ on:
           - allow_environment          
           - deny_pull_request
           - allow_all
+      environments:
+        description: 'Deployment environments'
+        type: choice
+        options:
+          - development
+          - production
+        default: dev
       repo_name:
         description: 'The name of the repository'
         required: true
@@ -25,5 +32,42 @@ on:
         description: 'The name of the role to create'
         required: true
         type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - environment: development
+    
+    environment: 
+      name: ${{ matrix.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials: ${{ secrets.SOPHOS_TF_API_TOKEN }}
+      - id: backend
+        run: |
+          cat >>config.remote.tfbackend<<EOF
+          hostname = "${{ secrets.TF_HOSTNAME }}"
+          organization = "${{}}"
+          workspaces = { Name = "${{ inputs.repo_name }}"}
+          EOF
+      - id: tfinit
+        run: |
+          terraform init -backend-config=config.remote.tfbackend
+  
 
         
