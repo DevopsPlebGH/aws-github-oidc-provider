@@ -1,3 +1,7 @@
+terraform {
+    backend "remote" {}
+}
+
 module "oidc_provider" {
   count  = var.create_provider ? 1 : 0
   source = "github.com/DevopsPlebGH/terraform-aws-github-oidc//modules/provider"
