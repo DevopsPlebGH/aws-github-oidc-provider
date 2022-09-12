@@ -60,10 +60,13 @@ jobs:
           cli_config_credentials: ${{ secrets.SOPHOS_TF_API_TOKEN }}
       - id: backend
         run: |
+          repo_name=${{ inputs.repo_name }}
+          workspace_name="${{repo_name#*/}}"
+
           cat >> config.remote.tfbackend<<EOF
           hostname = "${{ secrets.TF_HOSTNAME }}"
           organization = "${{ secrets.TF_ORGANIZATION }}"
-          workspaces = { Name = "${{ inputs.repo_name }}"}
+          workspaces = { Name = "$workspace_name"}
           EOF
       - id: tfinit
         run: |
